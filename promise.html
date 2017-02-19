@@ -1,0 +1,50 @@
+<html>
+<head>
+<script type="text/javascript">
+function promise_function(){
+	alert("hhhh");
+	if (window.Promise) { //browser supports promise
+  document.getElementById("showStatus").innerHTML+='<br>Promise found. Sync code started';
+
+  var promise = new Promise(function(resolve, reject) {
+    var request = new XMLHttpRequest();//making http request
+
+    request.open('GET', 'http://www.acadgild.com');
+    request.onload = function() {
+      if (request.status == 200) {//OK status
+        resolve(request.response); // we got data here, so resolve the Promise
+      } else {
+        reject(Error(request.statusText)); // status is not 200 OK, so reject 
+      }
+    };
+
+    request.onerror = function() {
+      reject(Error('Error fetching data.')); // error occurred, reject the  Promise
+    };
+
+    request.send(); //send the request
+  });
+
+  document.getElementById("showStatus").innerHTML+='<br>Asynchronous request made. Async code started' ;
+
+  promise.then(function(data) {//on successful response--promise.then()
+    console.log('Got data! Promise fulfilled. Async code terminated');
+   // document.getElementsByTagName('body')[0].textContent = JSON.parse(data).value;
+  }, function(error) { //on error of promise.then()
+  	 document.getElementById("showStatus").innerHTML+='<br>Promise rejected. Async code terminated';
+     document.getElementById("showStatus").innerHTML+='<br>'+error.message;
+  }); //end ofpromise.then(function())
+} else {//browser does not support Promise feature of javascript
+ document.getElementById("showStatus").innerHTML+='<br>Promise not available in this browser';
+}
+ document.getElementById("showStatus").innerHTML+='<br>Sync code terminated';
+}//end promise_function
+
+</script>
+</head>
+<body>
+	<button onclick="promise_function()">Click me </button>
+	<div id="showStatus">
+	</div>
+</body>
+</html>
